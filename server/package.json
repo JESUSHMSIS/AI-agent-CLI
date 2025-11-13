@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "AI-Agent": "./src/cli/main.js"
+  },
   "scripts": {
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
@@ -16,10 +19,18 @@
     "nodemon": "^3.1.11"
   },
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
     "@prisma/client": "^6.19.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
+    "commander": "^14.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "prisma": "^6.19.0"
+    "figlet": "^1.9.3",
+    "open": "^10.2.0",
+    "prisma": "^6.19.0",
+    "yocto-spinner": "^1.0.0",
+    "zod": "^4.1.12"
   }
 }
