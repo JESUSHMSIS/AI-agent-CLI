@@ -15,6 +15,7 @@ app.use(
 );
 app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
+
 app.get("/health", (req, res) => {
   res.send("todo bien en el server");
 });
@@ -23,6 +24,10 @@ app.get("/api/me", async (req, res) => {
     headers: fromNodeHeaders(req.headers),
   });
   return res.json(session);
+});
+app.get("/device", (req, res) => {
+  const { user_code } = req.query;
+  res.redirect(`http://localhost:3000/device?user_code=${user_code}`);
 });
 app.listen(process.env.PORT, () => {
   console.log(
