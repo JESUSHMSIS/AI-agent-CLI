@@ -241,9 +241,9 @@ export async function whoamiAction(opts) {
     },
   });
   console.log(
-    chalk.bold.greenBright(`\n Usuario: ${user.name}
-  Email: ${user.email}
-ID: ${user.id}
+    chalk.bold.greenBright(`\n   Usuario: ${user.name}
+   Email: ${user.email}
+   ID: ${user.id}
 `),
   );
 }
