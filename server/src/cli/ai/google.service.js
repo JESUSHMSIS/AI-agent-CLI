@@ -1,6 +1,6 @@
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
-import { config } from "../../config/google.config";
+import { config } from "../../config/google.config.js";
 import chalk from "chalk";
 
 export class AIService {
@@ -8,17 +8,18 @@ export class AIService {
     if (!config.googleApiKey) {
       throw new Error("GOOGLE_API_KEY is not set in env");
     }
-    this.model = google(google.model, {
+    this.model = google(config.model || "gemini-1.5-pro-latest", {
       apiKey: config.googleApiKey,
     });
   }
+
   /**
-   * Send a message and get streaming responder
+   * Send a message and get streaming response
    * @param {Array} messages
    * @param {Function} onChunk
    * @param {Object} tools
    * @param {Function} onToolCall
-   * @returns {Promise<Objetc>}
+   * @returns {Promise<Object>}
    * */
   async sendMessage(messages, onChunk, tools = undefined, onToolCall = null) {
     try {
@@ -26,24 +27,34 @@ export class AIService {
         model: this.model,
         messages: messages,
       };
-      const result = streamText(streamConfig);
+
+      if (tools) {
+        streamConfig.tools = tools;
+      }
+
+      const result = await streamText(streamConfig);
       let fullResponse = "";
+
       for await (const chunk of result.textStream) {
         fullResponse += chunk;
         if (onChunk) {
           onChunk(chunk);
         }
       }
-      const fullResult = result;
+
+      const finalResult = await result;
+
       return {
         content: fullResponse,
-        finishResponse: fullResult.finishReason,
-        usage: fullResult.usage,
+        finishReason: finalResult.finishReason,
+        usage: finalResult.usage,
       };
     } catch (error) {
-      console.error(chalk.red("Servicio de AI tuvo un error"), error.message);
+      console.error(chalk.red("Servicio de AI tuvo un error:"), error.message);
+      throw error;
     }
   }
+
   /**
    * @param {Array} messages
    * @param {Object} tools
@@ -51,9 +62,13 @@ export class AIService {
    * */
   async getMessage(messages, tools = undefined) {
     let fullResponse = "";
-    await this.sendMessage(messages, (chunk) => {
-      fullResponse += chunk;
-    });
+    await this.sendMessage(
+      messages,
+      (chunk) => {
+        fullResponse += chunk;
+      },
+      tools,
+    );
     return fullResponse;
   }
 }
