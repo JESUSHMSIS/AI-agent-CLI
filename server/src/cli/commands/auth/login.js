@@ -5,7 +5,6 @@ import { deviceAuthorizationClient } from "better-auth/plugins";
 
 import chalk from "chalk";
 import { Command } from "commander";
-import fs from "node:fs/promises";
 import os from "os";
 import path from "path";
 import yoctoSpinner from "yocto-spinner";
@@ -24,7 +23,7 @@ import {
 dotenv.config();
 const URL = "http://localhost:4000";
 const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
-export const CONFIG_DIR = path.join(os.homedir(), ".ai-agent");
+export const CONFIG_DIR = path.join(os.homedir(), ".better-auth");
 export const TOKEN_FILE = path.join(CONFIG_DIR, "token.json");
 
 export async function loginAction(opts) {
@@ -37,7 +36,12 @@ export async function loginAction(opts) {
   const clientId = options.clientId || CLIENT_ID;
 
   intro(chalk.bold("Better-Auth Login"));
-  //tarea: cambiar esto con el administrador de token utils
+
+  if (!clientId) {
+    logger.error("El CLIENT_ID no esta configurado en tu .env");
+    console.log(chalk.red("Por favor configura el CLIENT_ID en tu .env"));
+    process.exit(1);
+  }
   const existingToken = await getStoredToken();
   const expired = await isTokenExpired();
 

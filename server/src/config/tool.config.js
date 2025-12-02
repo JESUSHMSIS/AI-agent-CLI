@@ -4,25 +4,25 @@ import chalk from "chalk";
 export const availableTools = [
   {
     id: "google_search",
-    name: "Google Search",
+    name: "Busqueda en google:",
     description:
-      "Accede a la ultima informacion usando el buscador de google. Util para nuevos eventos , y informacion en tiempo real",
+      "Accede a la ultima informacion usando el buscador de google. Util para nuevos eventos , y informacion en tiempo real.",
     getTool: () => google.tools.googleSearch({}),
     enabled: false,
   },
   {
     id: "code_execution",
-    name: "Code Execution",
+    name: "Ejecucion de Codigo:",
     description:
-      "Genera y ejecuta codigo en cualquier lenguaje de la mejor manera para calculos, resolver problemas, o preveer informacion de calidad",
+      "Genera y ejecuta codigo en cualquier lenguaje de la mejor manera para calculos, resolver problemas, o preveer informacion de calidad.",
     getTool: () => google.tools.codeExecution({}),
     enabled: false,
   },
   {
     id: "url_context",
-    name: "Url Context",
+    name: "Contexto de Urls:",
     description:
-      "Proveer Urls especificas que tu quieras que analize el modelo directamente desde el prompt. Soporta hasta 20 Urls por peticion",
+      "Proveer Urls especificas que tu quieras que analize el modelo directamente desde el prompt. Soporta hasta 20 Urls por peticion.",
     getTool: () => google.tools.urlContext({}),
     enabled: false,
   },
