@@ -1,5 +1,5 @@
 import { google } from "@ai-sdk/google";
-import { streamText } from "ai";
+import { generateObject, streamText } from "ai";
 import { config } from "../../config/google.config.js";
 import chalk from "chalk";
 
@@ -38,7 +38,7 @@ export class AIService {
         );
       }
 
-      const result = await streamText(streamConfig);
+      const result = streamText(streamConfig);
       let fullResponse = "";
 
       for await (const chunk of result.textStream) {
@@ -98,5 +98,26 @@ export class AIService {
       tools,
     );
     return result.content;
+  }
+
+  /**
+   * Generar la estructura de salida usando zod schema
+   * @param {Object} schema
+   * @param {string} prompt
+   * @returns {Promise<Object>}
+   */
+
+  async generateStructured(schema, prompt) {
+    try {
+      const result = await generateObject({
+        model: this.model,
+        schema: schema,
+        prompt: prompt,
+      });
+      return result.object;
+    } catch (e) {
+      console.error(chalk.red("Error al generar la estructura:"), e.message);
+      throw e;
+    }
   }
 }
